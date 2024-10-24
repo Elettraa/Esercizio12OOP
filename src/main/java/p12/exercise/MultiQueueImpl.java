@@ -2,6 +2,7 @@ package p12.exercise;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -23,11 +24,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
             throw new UnsupportedOperationException("Unimplemented method 'openNewQueue'");
         }
         queues.add(queue);
+        map.put(queue, new LinkedList<>());
     }
 
     @Override
     public boolean isQueueEmpty(Q queue) {
-        if (queues.contains(queue) == true) {
+        if (queues.contains(queue) == false) {
             throw new UnsupportedOperationException("Unimplemented method 'isQueueEmpty'");
         }
         return map.get(queue).isEmpty();
@@ -35,7 +37,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
 
     @Override
     public void enqueue(T elem, Q queue) {
-        if (queues.contains(queue) == true) {
+        if (queues.contains(queue) == false) {
             throw new UnsupportedOperationException("Unimplemented method 'enqueue'");
         }
         map.get(queue).add(elem);
