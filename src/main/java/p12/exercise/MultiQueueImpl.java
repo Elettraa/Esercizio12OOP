@@ -32,18 +32,22 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         }
         return map.get(queue).isEmpty();
     }
-        
 
     @Override
     public void enqueue(T elem, Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enqueue'");
+        if (queues.contains(queue) == true) {
+            throw new UnsupportedOperationException("Unimplemented method 'enqueue'");
+        }
+        map.get(queue).add(elem);
     }
 
     @Override
     public T dequeue(Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dequeue'");
+        if (queues.contains(queue) == true) {
+            throw new UnsupportedOperationException("Unimplemented method 'dequeue'");
+        }
+        map.get(queue).remove();
+        return map.get(queue).element();
     }
 
     @Override
