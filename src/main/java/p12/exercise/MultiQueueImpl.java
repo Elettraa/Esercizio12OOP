@@ -1,25 +1,25 @@
 package p12.exercise;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
-public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
+public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     private final Set<Q> queues = new HashSet<>();
+    private final Map<Q, Queue<T>> map = new HashMap<>();
 
     @Override
     public Set<Q> availableQueues() {
-        if (queues.isEmpty() == true){
-            throw new UnsupportedOperationException("Unimplemented method 'availableQueues'");
-        }
-        Set<Q> queuesToReturn = new HashSet<>();
+        Set<Q> queuesToReturn = new HashSet<>(queues);
         return queuesToReturn;
     }
 
     @Override
     public void openNewQueue(Q queue) {
-        if (queues.contains(queue) == true){
+        if (queues.contains(queue) == true) {
             throw new UnsupportedOperationException("Unimplemented method 'openNewQueue'");
         }
         queues.add(queue);
@@ -27,9 +27,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public boolean isQueueEmpty(Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isQueueEmpty'");
+        if (queues.contains(queue) == true) {
+            throw new UnsupportedOperationException("Unimplemented method 'isQueueEmpty'");
+        }
+        return map.get(queue).isEmpty();
     }
+        
 
     @Override
     public void enqueue(T elem, Q queue) {
