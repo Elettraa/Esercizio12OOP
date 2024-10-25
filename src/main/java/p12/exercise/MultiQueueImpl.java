@@ -87,8 +87,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         }
         Queue<T> elementsOfQueue = map.get(queue);
         Iterator<T> elementsLeftInQueue = elementsOfQueue.iterator();
-        while (elementsLeftInQueue.hasNext() == true) {// all elements left in the queue){
-            // remove the first element and add it to the listToReturn
+        while (elementsLeftInQueue.hasNext() == true) {
             listToReturn.add(elementsLeftInQueue.next());
             elementsLeftInQueue.remove();
         }
@@ -101,11 +100,15 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
             throw new IllegalArgumentException("Unimplemented method 'closeQueueAndReallocate'");
         }
         List<T> elementsToAllocate = dequeueAllFromQueue(queue);
-        Set<Q> available = availableQueues();
-        if (available.isEmpty()) {
+        Set<Q> available = new HashSet<>(availableQueues());
+        available.remove(queue);
+        if (available.isEmpty() == true) {
             throw new IllegalStateException("Unimplemented method 'closeQueueAndReallocate'");
         }
         Q availableQueue = available.iterator().next();
-        map.get(availableQueue).addAll(elementsToAllocate);
+        for (T element : elementsToAllocate) {
+            map.get(availableQueue).add(element);
+        }
+        queues.remove(queue);
     }
 }
