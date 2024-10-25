@@ -22,7 +22,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public void openNewQueue(Q queue) {
         if (queues.contains(queue) == true) {
-            throw new UnsupportedOperationException("Unimplemented method 'openNewQueue'");
+            throw new IllegalArgumentException("Unimplemented method 'openNewQueue'");
         }
         queues.add(queue);
         map.put(queue, new LinkedList<>());
@@ -31,7 +31,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public boolean isQueueEmpty(Q queue) {
         if (queues.contains(queue) == false) {
-            throw new UnsupportedOperationException("Unimplemented method 'isQueueEmpty'");
+            throw new IllegalArgumentException("Unimplemented method 'isQueueEmpty'");
         }
         return map.get(queue).isEmpty();
     }
@@ -39,7 +39,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public void enqueue(T elem, Q queue) {
         if (queues.contains(queue) == false) {
-            throw new UnsupportedOperationException("Unimplemented method 'enqueue'");
+            throw new IllegalArgumentException("Unimplemented method 'enqueue'");
         }
         map.get(queue).add(elem);
     }
@@ -47,7 +47,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public T dequeue(Q queue) {
         if (queues.contains(queue) == false) {
-            throw new UnsupportedOperationException("Unimplemented method 'dequeue'");
+            throw new IllegalArgumentException("Unimplemented method 'dequeue'");
         }
         map.get(queue).remove();
         return map.get(queue).element();
@@ -55,11 +55,11 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
 
     @Override
     public Map<Q, T> dequeueOneFromAllQueues() {
-        Map<Q, T> mapToReturn = new HashMap();
-        for(Q singleQueue : queues){
+        Map<Q, T> mapToReturn = new HashMap<>();
+        for (Q singleQueue : queues) {
             dequeue(singleQueue);
             T dequeuedElement = map.get(singleQueue).element();
-            mapToReturn.put(singleQueue,dequeuedElement);
+            mapToReturn.put(singleQueue, dequeuedElement);
         }
         return mapToReturn;
     }
@@ -67,8 +67,8 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public Set<T> allEnqueuedElements() {
         Set<T> setToReturn = new HashSet<>();
-        for(Q singleQueue : queues){
-            for(T singleElement : map.get(singleQueue)){
+        for (Q singleQueue : queues) {
+            for (T singleElement : map.get(singleQueue)) {
                 setToReturn.add(singleElement);
             }
         }
@@ -77,16 +77,28 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
 
     @Override
     public List<T> dequeueAllFromQueue(Q queue) {
+        List<T> listToReturn = new ArrayList<>();
         if (queues.contains(queue) == false) {
-            throw new UnsupportedOperationException("Unimplemented method 'dequeueAllFromQueue'");
+            throw new IllegalArgumentException("Unimplemented method 'dequeueAllFromQueue'");
         }
-        
+        for (T element : map.get(queue)) {
+            listToReturn.add(element);
+        }
+        map.get(queue).remove();
+        return listToReturn;
     }
 
     @Override
     public void closeQueueAndReallocate(Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'closeQueueAndReallocate'");
+        if (queues.contains(queue) == false) {
+            throw new IllegalArgumentException("Unimplemented method 'closeQueueAndReallocate'");
+        }
+        List<T> elementsToAllocate = dequeueAllFromQueue(queue);
+        Set<Q> available = availableQueues();
+        if (available.isEmpty()) {
+            throw new IllegalStateException("Unimplemented method 'closeQueueAndReallocate'");
+        }
+        Q availableQueue = available.iterator().next();
+        map.get(availableQueue).addAll(elementsToAllocate);
     }
-
 }
