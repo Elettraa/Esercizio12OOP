@@ -49,8 +49,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         if (queues.contains(queue) == false) {
             throw new IllegalArgumentException("Unimplemented method 'dequeue'");
         }
+        if (map.get(queue).isEmpty()) {
+            return null;
+        }
+        T elementToReturn = map.get(queue).element();
         map.get(queue).remove();
-        return map.get(queue).element();
+        return elementToReturn;
     }
 
     @Override
@@ -81,10 +85,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         if (queues.contains(queue) == false) {
             throw new IllegalArgumentException("Unimplemented method 'dequeueAllFromQueue'");
         }
-        for (T element : map.get(queue)) {
+
+        Queue<T> elementsOfQueue = map.get(queue);
+        for (T element : elementsOfQueue) {
             listToReturn.add(element);
+            elementsOfQueue.remove();
         }
-        map.get(queue).remove();
         return listToReturn;
     }
 
