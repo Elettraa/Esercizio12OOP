@@ -23,16 +23,17 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public void openNewQueue(Q queue) {
         if (queues.contains(queue) == true) {
-            throw new IllegalArgumentException("Unimplemented method 'openNewQueue'");
+            throw new IllegalArgumentException("Queue exsist already'");
         }
         queues.add(queue);
-        map.put(queue, new LinkedList<>());
+        Queue<T> elements = new LinkedList<>();
+        map.put(queue, elements);
     }
 
     @Override
     public boolean isQueueEmpty(Q queue) {
         if (queues.contains(queue) == false) {
-            throw new IllegalArgumentException("Unimplemented method 'isQueueEmpty'");
+            throw new IllegalArgumentException("Queue does not exist");
         }
         return map.get(queue).isEmpty();
     }
@@ -40,7 +41,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public void enqueue(T elem, Q queue) {
         if (queues.contains(queue) == false) {
-            throw new IllegalArgumentException("Unimplemented method 'enqueue'");
+            throw new IllegalArgumentException("Queue does not exist");
         }
         map.get(queue).add(elem);
     }
@@ -48,14 +49,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public T dequeue(Q queue) {
         if (queues.contains(queue) == false) {
-            throw new IllegalArgumentException("Unimplemented method 'dequeue'");
+            throw new IllegalArgumentException("Queue does not exist");
         }
         if (map.get(queue).isEmpty()) {
             return null;
         }
-        T elementToReturn = map.get(queue).element();
-        map.get(queue).remove();
-        return elementToReturn;
+        return map.get(queue).poll();
     }
 
     @Override
@@ -83,7 +82,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     public List<T> dequeueAllFromQueue(Q queue) {
         List<T> listToReturn = new ArrayList<>();
         if (queues.contains(queue) == false) {
-            throw new IllegalArgumentException("Unimplemented method 'dequeueAllFromQueue'");
+            throw new IllegalArgumentException("Queue does not exist");
         }
         Queue<T> elementsOfQueue = map.get(queue);
         Iterator<T> elementsLeftInQueue = elementsOfQueue.iterator();
@@ -97,18 +96,16 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     @Override
     public void closeQueueAndReallocate(Q queue) {
         if (queues.contains(queue) == false) {
-            throw new IllegalArgumentException("Unimplemented method 'closeQueueAndReallocate'");
+            throw new IllegalArgumentException("Queue does not exist");
         }
         List<T> elementsToAllocate = dequeueAllFromQueue(queue);
         Set<Q> available = new HashSet<>(availableQueues());
         available.remove(queue);
         if (available.isEmpty() == true) {
-            throw new IllegalStateException("Unimplemented method 'closeQueueAndReallocate'");
+            throw new IllegalStateException("Queue is empty");
         }
         Q availableQueue = available.iterator().next();
-        for (T element : elementsToAllocate) {
-            map.get(availableQueue).add(element);
-        }
+        map.get(availableQueue).addAll(elementsToAllocate);
         queues.remove(queue);
     }
 }
