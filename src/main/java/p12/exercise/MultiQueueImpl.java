@@ -85,12 +85,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         if (queues.contains(queue) == false) {
             throw new IllegalArgumentException("Unimplemented method 'dequeueAllFromQueue'");
         }
-
-        Queue<T> elementsOfQueue = map.get(queue);
-        for (T element : elementsOfQueue) {
-            listToReturn.add(element);
-            elementsOfQueue.remove();
-        }
+        
         return listToReturn;
     }
 
