@@ -3,6 +3,7 @@ package p12.exercise;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -61,8 +62,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
     public Map<Q, T> dequeueOneFromAllQueues() {
         Map<Q, T> mapToReturn = new HashMap<>();
         for (Q singleQueue : queues) {
-            dequeue(singleQueue);
-            T dequeuedElement = map.get(singleQueue).element();
+            T dequeuedElement = dequeue(singleQueue);
             mapToReturn.put(singleQueue, dequeuedElement);
         }
         return mapToReturn;
@@ -85,7 +85,13 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         if (queues.contains(queue) == false) {
             throw new IllegalArgumentException("Unimplemented method 'dequeueAllFromQueue'");
         }
-        
+        Queue<T> elementsOfQueue = map.get(queue);
+        Iterator<T> elementsLeftInQueue = elementsOfQueue.iterator();
+        while (elementsLeftInQueue.hasNext() == true) {// all elements left in the queue){
+            // remove the first element and add it to the listToReturn
+            listToReturn.add(elementsLeftInQueue.next());
+            elementsLeftInQueue.remove();
+        }
         return listToReturn;
     }
 
