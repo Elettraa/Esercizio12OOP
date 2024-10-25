@@ -1,0 +1,6 @@
+[33m6b13e90[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Correcting openNewQueue method
+[33m70d0b6a[m Implementig methods until dequeue
+[33m86e813b[m Adding a HashMap to manage the elements of every single queue
+[33mcfd1c34[m Correcting gradleization
+[33mc2cee28[m Gradleization
+[33m4c99fed[m First commit
