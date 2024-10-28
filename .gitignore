@@ -1,6 +1,3 @@
-# ignore the bin folder and all its contents
+
 bin/
-# ignore every pdf file
 *.class
-# rule exception (beginning with a !): pdf files named 'myImportantFile.pdf' should be tracked
-#!myImportantFile.pdf
